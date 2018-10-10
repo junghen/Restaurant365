@@ -53,5 +53,13 @@ namespace StringCalculatorTest
             StringCalculator.StringCalculator sc = new StringCalculator.StringCalculator();
             Assert.AreEqual(-1, sc.Add(numbers));
         }
+        [TestMethod]
+        public void TestNewLineSeperator()
+        {
+            string numbers = "1\n2,3\n4";
+            StringCalculator.StringCalculator sc = new StringCalculator.StringCalculator();
+            Assert.AreEqual(10, sc.Add(numbers));
+        }
+        
     }
 }

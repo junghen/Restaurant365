@@ -10,7 +10,7 @@ namespace StringCalculator
     {
         static void Main(string[] args)
         {
-            string[] input = { "", "1", "1,2", "10,25", "999,1", "10000000000,1000000000", "1,2,3" };
+            string[] input = { "", "1", "1,2", "10,25", "999,1", "10000000000,1000000000", "1,2,3", "1\n2,3\n4" };
 
             StringCalculator sc = new StringCalculator();
 
@@ -36,20 +36,25 @@ namespace StringCalculator
             {
                 return 0;
             }
-            string[] numArray = numbers.Split(',');
+            // JK 10/9 code exercise 3 - Allow the Add method to handle new lines between numbers (instead of commas).
+            // replace '\n' with comma then split to string[]
+            string[] numArray = numbers.Replace('\n', ',').Split(',');
             int sumOfNumbers = 0;
-            // if numbers is more than 2 return -1.
-            // JK 10/9 code exercise 2 - Allow the Add method to handle an unknown amount of numbers.  
-            //if(numArray.Length > 2)
-            //{
-            //    Console.WriteLine("Too many numbers passed. Limit is 2");
-            //    return -1;
-            //}
-            // End Jk 10/9 code exercise 2.
+            
             for (int i=0; i< numArray.Length; i++)
             {
-                try { 
-                    sumOfNumbers += Convert.ToInt32(numArray[i]);
+                try {
+                    string number = numArray[i];
+                    int numToAdd;
+                    if (string.IsNullOrEmpty(number))
+                    {
+                        numToAdd = 0;
+                    }
+                    else
+                    {
+                        numToAdd = Convert.ToInt32(numArray[i]);
+                    }
+                        sumOfNumbers += numToAdd;
                 }
                 catch (Exception ex)
                 {
