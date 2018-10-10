@@ -10,7 +10,7 @@ namespace StringCalculator
     {
         static void Main(string[] args)
         {
-            string[] input = { "", "1", "1,2", "10,25", "999,1", "10000000000,1000000000", "1,2,3", "1\n2,3\n4", "//;\n1;2\n3\n4;5;6" };
+            string[] input = { "1,-2,-3", "", "1", "1,2", "10,25", "999,1", "10000000000,1000000000", "1,2,3", "1\n2,3\n4", "//;\n1;2\n3\n4;5;6" };
 
             StringCalculator sc = new StringCalculator();
 
@@ -38,40 +38,40 @@ namespace StringCalculator
             }
             // JK 10/9 code exercise 3 - Allow the Add method to handle new lines between numbers (instead of commas).
             // Find a better way to do it by using StringReader
-            string[] numArray = new string[0];// List<string[]> listNumbers = new List<string[]>();
-            using (System.IO.StringReader reader = new System.IO.StringReader(numbers))
+            try
             {
-                string line;
-                bool firstLine = true;
-                string delimiter = ",";
-                while ((line = reader.ReadLine()) != null)
+                string[] numArray = new string[0];// List<string[]> listNumbers = new List<string[]>();
+                using (System.IO.StringReader reader = new System.IO.StringReader(numbers))
                 {
-                    if (firstLine)
+                    string line;
+                    bool firstLine = true;
+                    string delimiter = ",";
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        if (line.Contains("//")) //if first line contains "//" then use delimiter set in string
+                        if (firstLine)
                         {
-                            // Assumption: delimiter is only 1 character
-                            delimiter = line.Substring(line.IndexOf("//") + 2, 1);
-                            firstLine = false;
-                            continue;
+                            if (line.Contains("//")) //if first line contains "//" then use delimiter set in string
+                            {
+                                // Assumption: delimiter is only 1 character
+                                delimiter = line.Substring(line.IndexOf("//") + 2, 1);
+                                firstLine = false;
+                                continue;
+                            }
+                            else
+                            {
+                                numArray = numArray.Concat(line.Split(new[] { delimiter }, StringSplitOptions.None)).ToArray();
+                                firstLine = false;
+                            }
                         }
                         else
                         {
                             numArray = numArray.Concat(line.Split(new[] { delimiter }, StringSplitOptions.None)).ToArray();
-                            firstLine = false;
                         }
                     }
-                    else
-                    {
-                        numArray = numArray.Concat(line.Split(new[] { delimiter }, StringSplitOptions.None)).ToArray();
-                    }
                 }
-            }
-            int sumOfNumbers = 0;
-
-            for (int i = 0; i < numArray.Length; i++)
-            {
-                try
+                int sumOfNumbers = 0;
+                List<int> listNegativeNumbers = new List<int>();
+                for (int i = 0; i < numArray.Length; i++)
                 {
                     string number = numArray[i];
                     int numToAdd;
@@ -82,16 +82,32 @@ namespace StringCalculator
                     else
                     {
                         numToAdd = Convert.ToInt32(numArray[i]);
+                        // code exercise 5 - Calling Add with a negative number will throw an exception “negatives not allowed” - and the negative that was passed. If there are multiple negatives, show all of them in the exception message
+                        if (numToAdd < 0)
+                        {
+                            listNegativeNumbers.Add(numToAdd);
+                        }
                     }
                     sumOfNumbers += numToAdd;
                 }
-                catch (Exception ex)
+
+                if (listNegativeNumbers.Count > 0)
                 {
-                    Console.WriteLine(ex.Message);
-                    return -1;
+                    string strNegativeNumbers = "";
+                    foreach (var negativeNumber in listNegativeNumbers)
+                    {
+                        strNegativeNumbers += "[" + negativeNumber.ToString() + "]";
+                    }
+                    throw new Exception(string.Format("negatives not allowed {0}", strNegativeNumbers));
                 }
+                return sumOfNumbers;
             }
-            return sumOfNumbers;
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return -1;
+            }
+            
         }
     }
 }
