@@ -60,6 +60,13 @@ namespace StringCalculatorTest
             StringCalculator.StringCalculator sc = new StringCalculator.StringCalculator();
             Assert.AreEqual(10, sc.Add(numbers));
         }
+        [TestMethod]
+        public void TestDifferentDelimiter()
+        {
+            string numbers = "//;\n1;2\n3\n4;5;6";
+            StringCalculator.StringCalculator sc = new StringCalculator.StringCalculator();
+            Assert.AreEqual(21, sc.Add(numbers));
+        }
         
     }
 }

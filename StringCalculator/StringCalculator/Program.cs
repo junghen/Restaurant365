@@ -10,12 +10,12 @@ namespace StringCalculator
     {
         static void Main(string[] args)
         {
-            string[] input = { "", "1", "1,2", "10,25", "999,1", "10000000000,1000000000", "1,2,3", "1\n2,3\n4" };
+            string[] input = { "", "1", "1,2", "10,25", "999,1", "10000000000,1000000000", "1,2,3", "1\n2,3\n4", "//;\n1;2\n3\n4;5;6" };
 
             StringCalculator sc = new StringCalculator();
 
             for (int i = 0; i < input.Length; i++) {
-                Console.WriteLine(string.Format("Sum of {0}:", input[i]));
+                Console.WriteLine(string.Format("Sum of {0}:", input[i].Replace("\n", ",")));
                 Console.WriteLine(string.Format("{0}", sc.Add(input[i]).ToString()));
             }
             Console.Read();
@@ -42,9 +42,29 @@ namespace StringCalculator
             using (System.IO.StringReader reader = new System.IO.StringReader(numbers))
             {
                 string line;
+                bool firstLine = true;
+                string delimiter = ",";
                 while ((line = reader.ReadLine()) != null)
                 {
-                    numArray = numArray.Concat(line.Split(',')).ToArray();
+                    if (firstLine)
+                    {
+                        if (line.Contains("//")) //if first line contains "//" then use delimiter set in string
+                        {
+                            // Assumption: delimiter is only 1 character
+                            delimiter = line.Substring(line.IndexOf("//") + 2, 1);
+                            firstLine = false;
+                            continue;
+                        }
+                        else
+                        {
+                            numArray = numArray.Concat(line.Split(new[] { delimiter }, StringSplitOptions.None)).ToArray();
+                            firstLine = false;
+                        }
+                    }
+                    else
+                    {
+                        numArray = numArray.Concat(line.Split(new[] { delimiter }, StringSplitOptions.None)).ToArray();
+                    }
                 }
             }
             int sumOfNumbers = 0;
