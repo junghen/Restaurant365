@@ -42,7 +42,9 @@ namespace StringCalculatorTest
         {
             string numbers = "1,5,6";
             StringCalculator.StringCalculator sc = new StringCalculator.StringCalculator();
-            Assert.AreEqual(-1, sc.Add(numbers));
+            //Assert.AreEqual(-1, sc.Add(numbers));
+            // JK 10/9 code exercise 2 - Added support for unknown amount of numbers 
+            Assert.AreEqual(12, sc.Add(numbers));
         }
         [TestMethod]
         public void TestException()

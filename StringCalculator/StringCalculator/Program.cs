@@ -39,12 +39,14 @@ namespace StringCalculator
             string[] numArray = numbers.Split(',');
             int sumOfNumbers = 0;
             // if numbers is more than 2 return -1.
-            if(numArray.Length > 2)
-            {
-                Console.WriteLine("Too many numbers passed. Limit is 2");
-                return -1;
-            }
-            for(int i=0; i< numArray.Length; i++)
+            // JK 10/9 code exercise 2 - Allow the Add method to handle an unknown amount of numbers.  
+            //if(numArray.Length > 2)
+            //{
+            //    Console.WriteLine("Too many numbers passed. Limit is 2");
+            //    return -1;
+            //}
+            // End Jk 10/9 code exercise 2.
+            for (int i=0; i< numArray.Length; i++)
             {
                 try { 
                     sumOfNumbers += Convert.ToInt32(numArray[i]);
