@@ -37,13 +37,22 @@ namespace StringCalculator
                 return 0;
             }
             // JK 10/9 code exercise 3 - Allow the Add method to handle new lines between numbers (instead of commas).
-            // replace '\n' with comma then split to string[]
-            string[] numArray = numbers.Replace('\n', ',').Split(',');
-            int sumOfNumbers = 0;
-            
-            for (int i=0; i< numArray.Length; i++)
+            // Find a better way to do it by using StringReader
+            string[] numArray = new string[0];// List<string[]> listNumbers = new List<string[]>();
+            using (System.IO.StringReader reader = new System.IO.StringReader(numbers))
             {
-                try {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    numArray = numArray.Concat(line.Split(',')).ToArray();
+                }
+            }
+            int sumOfNumbers = 0;
+
+            for (int i = 0; i < numArray.Length; i++)
+            {
+                try
+                {
                     string number = numArray[i];
                     int numToAdd;
                     if (string.IsNullOrEmpty(number))
@@ -54,7 +63,7 @@ namespace StringCalculator
                     {
                         numToAdd = Convert.ToInt32(numArray[i]);
                     }
-                        sumOfNumbers += numToAdd;
+                    sumOfNumbers += numToAdd;
                 }
                 catch (Exception ex)
                 {
