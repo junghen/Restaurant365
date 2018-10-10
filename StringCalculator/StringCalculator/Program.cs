@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace StringCalculator
 {
@@ -10,7 +11,7 @@ namespace StringCalculator
     {
         static void Main(string[] args)
         {
-            string[] input = { "1,-2,-3", "", "1", "1,2", "10,25", "999,1", "10000000000,1000000000", "1,2,3", "1\n2,3\n4", "//;\n1;2\n3\n4;5;6" };
+            string[] input = { "1,-2,-3", "", "1", "1,2", "10,25", "999,1", "10000000000,1000000000", "1,2,3", "1\n2,3\n4", "//[;]\n1;2\n3\n4;5;6", "//[;]\n1;2\n3\n4;5;6;1001;1002", "//[***]\n 1***2\n3\n4***5***6***1001\n1002", "//[***][---][%@!]\n 1---2\n3\n4***5%@!6,1001\n1002" }; 
 
             StringCalculator sc = new StringCalculator();
 
@@ -45,27 +46,35 @@ namespace StringCalculator
                 {
                     string line;
                     bool firstLine = true;
-                    string delimiter = ",";
+                    List<string> delimiter = new List<string>();
+                    delimiter.Add(",");
                     while ((line = reader.ReadLine()) != null)
                     {
                         if (firstLine)
                         {
                             if (line.Contains("//")) //if first line contains "//" then use delimiter set in string
                             {
-                                // Assumption: delimiter is only 1 character
-                                delimiter = line.Substring(line.IndexOf("//") + 2, 1);
+                                // code exercise 7 - Delimiters can be of any length with the following format:  “//[delimiter]\n”
+                                // code exercise 8 - Allow multiple delimiters like this:  “//[delim1][delim2]\n”
+                                // code exercise 9 - Make sure you can also handle multiple delimiters with length longer than one char
+
+                                Regex pattern = new Regex(@"\[(.*?)\]");
+                                foreach (Match match in pattern.Matches(line))
+                                {
+                                    delimiter.Add(match.Value.Replace("[", string.Empty).Replace("]", string.Empty));
+                                }
                                 firstLine = false;
                                 continue;
                             }
                             else
                             {
-                                numArray = numArray.Concat(line.Split(new[] { delimiter }, StringSplitOptions.None)).ToArray();
+                                numArray = numArray.Concat(line.Split(delimiter.ToArray(), StringSplitOptions.None)).ToArray();
                                 firstLine = false;
                             }
                         }
                         else
                         {
-                            numArray = numArray.Concat(line.Split(new[] { delimiter }, StringSplitOptions.None)).ToArray();
+                            numArray = numArray.Concat(line.Split(delimiter.ToArray(), StringSplitOptions.None)).ToArray();
                         }
                     }
                 }
@@ -88,7 +97,10 @@ namespace StringCalculator
                             listNegativeNumbers.Add(numToAdd);
                         }
                     }
-                    sumOfNumbers += numToAdd;
+                    if (numToAdd <= 1000) // code exercise 6 - Numbers bigger than 1000 should be ignored, so adding 2 + 1001  = 2
+                    {
+                        sumOfNumbers += numToAdd;
+                    }
                 }
 
                 if (listNegativeNumbers.Count > 0)

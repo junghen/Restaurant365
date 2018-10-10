@@ -63,10 +63,30 @@ namespace StringCalculatorTest
         [TestMethod]
         public void TestDifferentDelimiter()
         {
-            string numbers = "//;\n1;2\n3\n4;5;6";
+            string numbers = "//[;]\n1;2\n3\n4;5;6";
             StringCalculator.StringCalculator sc = new StringCalculator.StringCalculator();
             Assert.AreEqual(21, sc.Add(numbers));
         }
-        
+        [TestMethod]
+        public void TestNegativeNumberException()
+        {
+            string numbers = "1,-2,-3";
+            StringCalculator.StringCalculator sc = new StringCalculator.StringCalculator();
+            Assert.AreEqual(-1, sc.Add(numbers));
+        }
+        [TestMethod]
+        public void TestIgnoreNumberGreaterThan1000()
+        {
+            string numbers = "//[;]\n1;2\n3\n4;5;6;1001;1002";
+            StringCalculator.StringCalculator sc = new StringCalculator.StringCalculator();
+            Assert.AreEqual(21, sc.Add(numbers));
+        }
+        [TestMethod]
+        public void TestMultipleDelimitersWithLengthGreaterThanOne()
+        {
+            string numbers = "//[***][---][%@!]\n 1---2\n3\n4***5%@!6,1001\n1002";
+            StringCalculator.StringCalculator sc = new StringCalculator.StringCalculator();
+            Assert.AreEqual(21, sc.Add(numbers));
+        }
     }
 }
